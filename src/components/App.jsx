@@ -18,9 +18,7 @@ function App() {
     if (!query) {
       return;
     }
-
-    setShowLoader(true);
-
+  setShowLoader(true);
     try {
       fetchImages(query, page).then(data => {
         if (!data.hits.length) {
@@ -50,7 +48,6 @@ function App() {
       behavior: 'smooth',
     });
   }, [page, scroll]);
-
 
   const searchQuery = newQuery => {
     if (newQuery.trim() !== query) {

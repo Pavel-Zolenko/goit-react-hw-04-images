@@ -14,28 +14,32 @@ function App() {
   const [scroll, setScroll] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
 
-  useEffect(() => {
+ useEffect(() => {
     if (!query) {
       return;
     }
+
     setShowLoader(true);
 
-    fetchImages(query, page)
-      .then(data => {
+    try {
+      fetchImages(query, page).then(data => {
         if (!data.hits.length) {
           alert('No images found due to your search inquiry');
-            
+          setShowLoader(false);
         } else {
-
-          setImages([...images, ...data.hits])
-          setTotalFound(data.totalHits)
-          setScroll(document.documentElement.scrollHeight)
+          
+          setImages(prevState => {
+            return [...prevState, ...data.hits];
+          });
+          setTotalFound(data.totalHits);
+          setShowLoader(false);
+          setScroll(document.documentElement.scrollHeight);
         }
-      })
-      .catch(error => alert(error))
-      .finally(setShowLoader(false));
-    
-  }, [query, page]);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [page, query]);
 
   useEffect(() => {
     if (!scroll || page === 1) {
@@ -65,12 +69,9 @@ function App() {
     return (
       <>
         <Searchbar onSubmit={searchQuery} />
-         <ToastContainer autoClose={3000} />
-
+        <ToastContainer autoClose={3000} />
         <ImageGallery images={images} />
-
         {showLoader && <Loader />}
-
         {images.length > 0 && images.length < totalFound && (
           <Button loadMore={loadMore} />
         )}

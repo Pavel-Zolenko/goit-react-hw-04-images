@@ -7,19 +7,32 @@ const modalRoot = document.querySelector('#modal-root');
 
 export default function Modal({ onClose, children }) {
   
-  useEffect(() => {
-  window.addEventListener('keydown', handleEscape);  
+  // useEffect(() => {
+  // window.addEventListener('keydown', handleEscape);  
+  //   return () => {
+  //      window.removeEventListener('keydown', handleEscape);
+  //   }
+  // }, [])
+
+  // const handleEscape = event => {
+  //   if (event.code === 'Escape') {
+  //     onClose();
+  //   }
+  // };
+
+useEffect(() => {
+      const handleEscape = event => {
+        if (event.code === 'Escape') {
+          onClose();
+        }
+      };
+  window.addEventListener('keydown', handleEscape);
     return () => {
        window.removeEventListener('keydown', handleEscape);
     }
-  }, [])
+  }, [onClose])
 
 
-  const handleEscape = event => {
-    if (event.code === 'Escape') {
-      onClose();
-    }
-  };
 
   const handleBackdrop = event => {
     if (event.currentTarget === event.target) {
